@@ -24,7 +24,7 @@ class CommentTestCase(TestCase):
         cls.valid_rating = 5
 
     # SUCCESS TESTS
-    @log_execution
+    # @log_execution
     def test_successful_comment_creation_minimal(self):
         comment = Comment.objects.create(
             product=self.product,
@@ -41,7 +41,7 @@ class CommentTestCase(TestCase):
         self.assertIsNotNone(stored.created_at)
         self.assertIsNotNone(stored.updated_at)
 
-    @log_execution
+    # @log_execution
     def test_successful_comment_creation_with_text(self):
         comment = Comment.objects.create(
             product=self.product,
@@ -55,7 +55,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(stored.text, self.text_content)
         self.assertEqual(stored.rating, self.valid_rating)
 
-    @log_execution
+    # @log_execution
     def test_successful_guest_comment_creation(self):
         comment = Comment.objects.create(
             product=self.product,
@@ -72,7 +72,7 @@ class CommentTestCase(TestCase):
         self.assertIsNone(stored.user)
 
     # FAILURE TESTS
-    @log_execution
+    # @log_execution
     def test_failure_comment_creation_without_product(self):
         with self.assertRaises(ValidationError) as ctx:
             comment = Comment(
@@ -85,7 +85,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"product": ["This field cannot be null."]})
         self.assertEqual(Comment.objects.count(), 0)
 
-    @log_execution
+    # @log_execution
     def test_failure_comment_creation_without_rating(self):
         with self.assertRaises(ValidationError) as ctx:
             comment = Comment(
@@ -98,7 +98,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"rating": ["This field cannot be null."]})
         self.assertEqual(Comment.objects.count(), 0)
 
-    @log_execution
+    # @log_execution
     def test_failure_comment_creation_with_invalid_rating_low(self):
         with self.assertRaises(ValidationError) as ctx:
             comment = Comment(
@@ -111,7 +111,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"rating": ["Ensure this value is greater than or equal to 1."]})
         self.assertEqual(Comment.objects.count(), 0)
 
-    @log_execution
+    # @log_execution
     def test_failure_comment_creation_with_invalid_rating_high(self):
         with self.assertRaises(ValidationError) as ctx:
             comment = Comment(
@@ -124,7 +124,7 @@ class CommentTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"rating": ["Ensure this value is less than or equal to 5."]})
         self.assertEqual(Comment.objects.count(), 0)
 
-    @log_execution
+    # @log_execution
     def test_failure_duplicate_user_product_comment(self):
         # First comment should succeed
         Comment.objects.create(
@@ -148,7 +148,7 @@ class CommentTestCase(TestCase):
         )
         self.assertEqual(Comment.objects.count(), 1)
 
-    @log_execution
+    # @log_execution
     def test_comment_string_representation_with_user(self):
         comment = Comment.objects.create(
             product=self.product,
@@ -160,7 +160,7 @@ class CommentTestCase(TestCase):
         expected_str = f"{self.user.username} - {self.valid_rating}★"
         self.assertEqual(str(comment), expected_str)
 
-    @log_execution
+    # @log_execution
     def test_comment_string_representation_with_guest(self):
         guest_name = "Guest User"
         comment = Comment.objects.create(
@@ -171,7 +171,7 @@ class CommentTestCase(TestCase):
         expected_str = f"{guest_name} - {self.valid_rating}★"
         self.assertEqual(str(comment), expected_str)
 
-    @log_execution
+    # @log_execution
     def test_comment_string_representation_anonymous_guest(self):
         comment = Comment.objects.create(
             product=self.product,
