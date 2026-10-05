@@ -14,7 +14,7 @@ class CategoryTestCase(TestCase):
         self.test_category_description = "This is a test category description."
 
     # SUCCESS TEST CASES
-    # @log_execution
+    @log_execution
     def test_successful_category_creation_without_description(self):
         # Test the creation of a category
         category = Category.objects.create(name=self.test_category_name, slug=self.test_category_slug)
@@ -32,7 +32,7 @@ class CategoryTestCase(TestCase):
         # Ensure updated_at is set
         self.assertIsNotNone(Category.objects.first().updated_at)
 
-    # @log_execution
+    @log_execution
     def test_successful_category_creation_with_description(self):
         # Test the creation of a category with a description
         category = Category.objects.create(
@@ -47,7 +47,7 @@ class CategoryTestCase(TestCase):
         self.assertTrue(Category.objects.filter(slug=self.test_category_slug).exists())
 
     # FAILURE TEST CASES
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_without_name(self):
         # Test the failure of category creation without a name
         with self.assertRaises(ValidationError) as ctx:
@@ -58,7 +58,7 @@ class CategoryTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"name": ["This field cannot be blank."]})
         self.assertEqual(Category.objects.count(), 0)
 
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_without_slug(self):
         # Test the failure of category creation without a slug
         with self.assertRaises(ValidationError) as ctx:
@@ -69,7 +69,7 @@ class CategoryTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"slug": ["This field cannot be blank."]})
         self.assertEqual(Category.objects.count(), 0)
 
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_with_duplicate_name(self):
         Category.objects.create(name=self.test_category_name, slug=self.test_category_slug)
         with self.assertRaises(ValidationError) as ctx:
@@ -80,7 +80,7 @@ class CategoryTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"name": ["Category with this Name already exists."]})
         self.assertEqual(Category.objects.count(), 1)
 
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_with_too_long_name(self):
         long_name = "a" * 51
         with self.assertRaises(ValidationError) as ctx:
@@ -93,7 +93,7 @@ class CategoryTestCase(TestCase):
         )
         self.assertEqual(Category.objects.count(), 0)
 
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_with_too_long_slug(self):
         long_slug = "a" * 51
         with self.assertRaises(ValidationError) as ctx:
@@ -106,7 +106,7 @@ class CategoryTestCase(TestCase):
         )
         self.assertEqual(Category.objects.count(), 0)
 
-    # @log_execution
+    @log_execution
     def test_failure_category_creation_with_duplicate_slug(self):
         Category.objects.create(name=self.test_category_name, slug=self.test_category_slug)
         with self.assertRaises(ValidationError) as ctx:
@@ -117,7 +117,7 @@ class CategoryTestCase(TestCase):
         self.assertEqual(ctx.exception.message_dict, {"slug": ["Category with this Slug already exists."]})
         self.assertEqual(Category.objects.count(), 1)
 
-    # @log_execution
+    @log_execution
     def test_category_string_representation(self):
         category = Category.objects.create(name=self.test_category_name, slug=self.test_category_slug)
         # Ensure __str__ method works correctly

@@ -12,7 +12,7 @@ class TagTemplateTestCase(TestCase):
         cls.category = Category.objects.create(name="Test Category", slug="test-category")
         cls.product = Product.objects.create(name="Test Product", price="9.99", category=cls.category)
 
-    # @log_execution
+    @log_execution
     def test_product_detail_shows_heading_and_tags(self):
         """Test that the tag heading and assigned tags are rendered."""
         tag = Tag.objects.create(name="wooden")
@@ -22,7 +22,7 @@ class TagTemplateTestCase(TestCase):
         self.assertContains(resp, "Product-Tags")
         self.assertContains(resp, "wooden")
 
-    # @log_execution
+    @log_execution
     def test_product_detail_without_tags_fallback(self):
         """Test the fallback label when a product has no tags."""
         url = reverse("product_detail", args=[self.category.slug, self.product.pk])
