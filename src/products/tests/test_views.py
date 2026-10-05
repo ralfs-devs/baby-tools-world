@@ -259,8 +259,9 @@ class ProductViewAndCommentFormTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         related = list(resp.context["related_products"])
         self.assertLessEqual(len(related), 8)
-        
+
         # -------- Form reset after submission for authenticated users --------
+
     def test_comment_form_cleared_for_submitted_product_only(self):
         """Test that the form is cleared for the just-rated product."""
         self.client.login(username="tester", password="pass1234")

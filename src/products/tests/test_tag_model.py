@@ -5,6 +5,7 @@ from products.models import Category, Product, Tag
 
 # from btw_app.utils import log_execution
 
+
 class TagTestCase(TestCase):
 
     @classmethod
@@ -66,9 +67,7 @@ class TagTestCase(TestCase):
     # @log_execution
     def test_same_tag_on_multiple_products(self):
         """Test that one tag can be shared across multiple products."""
-        other_product = Product.objects.create(
-            name="Other Product", price="4.99", category=self.category
-        )
+        other_product = Product.objects.create(name="Other Product", price="4.99", category=self.category)
         self.product.tags.add(self.tag_wooden)
         other_product.tags.add(self.tag_wooden)
         self.assertEqual(self.tag_wooden.products.count(), 2)

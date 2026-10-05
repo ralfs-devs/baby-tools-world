@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from btw_app.utils import log_execution
 from products.models import Category, Product, Tag
 
-from btw_app.utils import log_execution
 
 class TagTemplateTestCase(TestCase):
 

@@ -4,6 +4,7 @@ from django.test import TestCase
 from products.admin import ProductAdmin
 from products.models import Category, Product, Tag
 
+
 class TagAdminTestCase(TestCase):
 
     @classmethod
