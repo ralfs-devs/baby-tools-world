@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -260,9 +262,7 @@ class ProductViewAndCommentFormTests(TestCase):
         related = list(resp.context["related_products"])
         self.assertLessEqual(len(related), 8)
 
-        # -------- Form reset after submission for authenticated users --------
-
-    def test_comment_form_cleared_for_submitted_product_only(self):
+    def test_comment_form_cleared_for_submitted_product_only(self) -> None:
         """Test that the form is cleared for the just-rated product."""
         self.client.login(username="tester", password="pass1234")
         Comment.objects.create(product=self.product, user=self.user, rating=3, text="Old")
@@ -271,9 +271,9 @@ class ProductViewAndCommentFormTests(TestCase):
         form = resp.context["form"]
         self.assertEqual(form.initial, {})
 
-    def test_comment_form_prefilled_for_other_product_after_submission(self):
+    def test_comment_form_prefilled_for_other_product_after_submission(self) -> None:
         """Test that another product's form is still prefilled after a submission elsewhere."""
-        other = Product.objects.create(name="Red Rattle", price="5.00", category=self.category)
+        other = Product.objects.create(name="Red Rattle", price=Decimal("5.00"), category=self.category)
         Comment.objects.create(product=other, user=self.user, rating=2, text="Old")
         self.client.login(username="tester", password="pass1234")
         url = reverse("product_detail", args=[self.category.slug, self.product.pk])
@@ -283,7 +283,7 @@ class ProductViewAndCommentFormTests(TestCase):
         form = resp.context["form"]
         self.assertEqual(form.initial.get("rating"), 2)
 
-    def test_comment_form_prefilled_again_on_later_visit(self):
+    def test_comment_form_prefilled_again_on_later_visit(self) -> None:
         """Test that the form is prefilled again when visiting later without prior submission."""
         Comment.objects.create(product=self.product, user=self.user, rating=3, text="Old")
         self.client.login(username="tester", password="pass1234")
