@@ -31,48 +31,51 @@ To work with this repository you need the following tools installed on your mach
 
 ## Quickstart
 
-**1. Clone the repository into a local folder**
-   
+1. Clone the repository into a local folder
+
    Create a folder and navigate to it in your terminal,  
    then run
-   
+
    ```bash
    git clone https://github.com/ralfs-devs/baby-tools-world.git
    cd baby-tools-world
    ```
 
-**2. Create and activate a virtual environment**
-   
+2. Create and activate a virtual environment
+
    Create a virtual environment with
+
    ```bash
    python -m venv .venv
    ```
-   
-   And activate it  
+
+   And activate it
 
    for Linux/Mac Systems:
+
    ```bash
    source .venv/bin/activate
    ```
+
    or for Windows:
+
    ```bash
    .venv\Scripts\activate
    ```  
 
-
-**3. Install dependencies**
+3. Install dependencies
 
    ```bash
    pip install -r requirements.txt
    ```
 
-**4. Configure environment variables**
+4. Configure environment variables
 
    ```bash
    cp example.env src/.env
    ```
 
-**5. Prepare the database and start the server**
+5. Prepare the database and start the server
 
    ```bash
    cd src
@@ -80,11 +83,11 @@ To work with this repository you need the following tools installed on your mach
    python manage.py runserver
    ```
 
-**6. Verify**
+6. Verify
 
    Open `http://localhost:8000` in your browser.
 
-**7. (optional): Create a superuser**
+7. (optional): Create a superuser
 
    ```bash
    python manage.py createsuperuser
@@ -149,6 +152,7 @@ tags, and comments.
 - `requirements.txt`: All pinned project dependencies.
 
 ## Docker Container
+
 This point is optional:  
 
 Build the container image:
@@ -169,4 +173,4 @@ To override the predefined environment configuration, provide an `.env` file:
 docker run --rm -it -p 8000:8000 --env-file .env baby-tools-world:local
 ```
 
-The application is then reachable at `http://localhost:8000`.
+The application is then reachable at `http://localhost:8000`
