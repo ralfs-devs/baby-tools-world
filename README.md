@@ -1,182 +1,176 @@
 # Baby Tools World
 
-This repository contains the source code of the 'Baby Tools World' which is a simple full stack shop application written in Python using Django 6.
-The project was developed for educational purposes only and therefore has no claim to feature completeness, or only minimal claims regarding application security, user experience, or design.
+This repository contains the source code of the Baby Tools World web shop, a simple
+full stack application written in Python using Django. Products are grouped by
+categories, can be tagged with descriptive labels, and rated by registered users
+and guests. Administrators manage catalog data through the Django admin panel.
+The project was developed for educational purposes only.
 
-> [!NOTE]
-> This project assumes you already know the python programming language
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Quickstart](#quickstart)
+- [Usage](#usage)
+  - [Configuration](#configuration)
+  - [Seeding the Database](#seeding-the-database)
+  - [Testing](#testing)
+  - [Admin Panel](#admin-panel)
+- [Project Structure](#project-structure)
+- [Docker Container](#docker-container)
 
 ## Prerequisites
 
-In order to seamlessly interact with the repository and the software it contains you need to following tools preinstalled:
+To work with this repository you need the following tools installed on your machine:
 
-- Python Interpreter
-- OCI-Compliant Container Engine (e.g. podman, docker, etc.)
-- Editor/IDE of your choice (VSC, PyCharm, etc.)
+- **Git** for cloning the repository
+- **Python 3.12 or later** including `pip`
+- A virtual environment tool (`venv` ships with Python)
+- **Docker** or any OCI-compliant container engine (only needed for the optional
+  container section)
+- An editor or IDE of your choice (VS Code, PyCharm, etc.)
 
 ## Quickstart
 
-In order to quickly get started with the project follow these steps:
+1. Clone the repository into a local folder
 
-1. clone the repository
-1. nagivate to the repository
-1. (optional) create a virtual environment with `python -m venv my-venv`
-    1. activate the virtual environment:
-        - on Windows run: `my-venv/Scripts/activate`
-        - on MacOS/Linux run: `source my-venv/bin/activate`
-1. install the project dependencies with `pip install -r requirements.txt`
-1. configure required application environment variables
-    - `cp example.env .env`
-1. go to the `src` directory via `cd src`
-1. prepare the database (create and apply migrations)
-    1. `python manage.py makemigrations`
-    1. `python manage.py migrate`
-1. start the application with `python manage.py runserver`
-1. verify the application is running by visiting `localhost:8000`
-1. (optional) create a superuser by running: `python manage.py createsuperuser`
+   Create a folder and navigate to it in your terminal,  
+   then run
 
-## Project Structure
+   ```bash
+   git clone https://github.com/ralfs-devs/baby-tools-world.git
+   cd baby-tools-world
+   ```
 
-- `.gitlab`: GitLab specific project files
-- `.github`: GitHub specific project files
-- `src`: application source code, containing the django project, apps, and other files
-- `requirements.txt`: the project dependencies
+2. Create and activate a virtual environment
 
-### Apps Overview
+   Create a virtual environment with
 
-The project is modularized into several apps:
+   ```bash
+   python -m venv .venv
+   ```
 
-- `products`: Manages product listings and categories
-- `users`: Handles user authentication and registration.
+   And activate it
 
-Each app has its own `models.py`, `views.py`, `urls.py`, and `admin.py` files to encapsulate its functionality.
+   for Linux/Mac Systems:
+
+   ```bash
+   source .venv/bin/activate
+   ```
+
+   or for Windows:
+
+   ```bash
+   .venv\Scripts\activate
+   ```  
+
+3. Install dependencies
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Configure environment variables
+
+   ```bash
+   cp example.env src/.env
+   ```
+
+5. Prepare the database and start the server
+
+   ```bash
+   cd src
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+6. Verify
+
+   Open `http://localhost:8000` in your browser.
+
+7. (optional): Create a superuser
+
+   ```bash
+   python manage.py createsuperuser
+   ```
 
 ## Usage
 
-In this section you can read about the project a bit more in detail.
+- Browse the homepage to see all categories and products.
+- Open a product detail page to view its description, rating summary and product tags.
+  Products without tags show the label "no tags available".
+- Log in as an admin at `/admin/` to manage products, categories and tags.
+- Submit a rating or comment. After a successful submission the form fields
+  (rating stars and comment text) are cleared automatically.
 
 ### Configuration
 
-To configure the project, follow these steps:
-
-1. Copy the example environment file to the `src` directory: `cp example.env src/.env`.
-    - the file needs to be stored next to the manage.py file in order to function properly.
-    Other locations might also work but there is no guarantuee, and in last consequence you will need to update to project correspondingly.
-2. Open your `src/.env` and set the required environment variables:
-    - `ALLOWED_HOSTS`: provide a list of comma-separated values for the allowed host configuration => Defaults to `'localhost, 127.0.0.1, 0.0.0.0'`
-    - `DEBUG`: Set to `True` for development or `False` for production. Defaults to `True`
-
-### Running the linting tools
-
-> [!tip]
-> In order to run the routines below the required packages must be installed (done after running `pip install -r requirements.txt`).
->
-> If you are using a virtual environment this also needs to be activated.
-
-To run code-quality checks that check the code-style and formatting you can run the following commands in your terminal:
+If not done during Quickstart copy the example environment file and adjust it to your needs:
 
 ```bash
-# to format the python code
-black .
-# to apply correct sorting for imports
-isort .
+cp example.env src/.env
 ```
 
-#### When to run this
+- `ALLOWED_HOSTS`: Comma-separated list of allowed hosts. Defaults to `localhost, 127.0.0.1, 0.0.0.0`
+- `DEBUG`: Set to `True` for development or `False` for production.
 
-You should check the code-style before pushing the commits to the remote repository.
-In case you forgot it and somehow violated a rule, the CI workflow will fail -> run linting, add changes, commit, push -> see if pipeline passes
+### Seeding the Database
 
-> [!note]
-> If a CI workflow fails, you should check the logs to find out where the workflow failed and what was the reason for this failure.
-
-### Testing
-
-This project contains tests for the corresponding apps in the respective packages.
-Tests in Django can either be located in a `tests.py` file within a django-app, or you could also have a module named `tests` (essentially a folder with an `__init__.py` file).
-
-> [!TIP]
-> The django testrunner will by default discover tests by finding all python files that contain the word `test` in their name, e.g. `test.py`, `test_model.py`, or similar.
-
-Example Structure:
-
-```console
-baby-tool-world/src/products
-├───management
-├───migrations
-├───templates
-└───tests <-- this is the module
-      ├───__init__.py
-      ├───test_category_model.py <-- this is a test file
-      └───test_category_model.py <-- this is a test file too
-```
-
-#### Running tests
-
-To run the tests with the `django testrunner` you can use the following command:
-
-- `python manage.py test`, you need to run this in the folder where `manage.py` lives -> `src`
-
-For more information about testing, refer to the testing documentation in this repository, see [testing documentation](./docs/testing.md)
-
-### Running with a WSGI Server
-
-**WSGI** (Web Server Gateway Interface) is a specification that defines a standard interface between web servers and Python web applications or frameworks.
-It acts as a bridge, allowing web servers to communicate with Python applications in a consistent manner.
-
-In Django deployments, WSGI is used to serve the application in a production environment.
-It enables the web server (e.g., Gunicorn, uWSGI, or Apache with mod_wsgi) to forward
-requests to the Django application and return responses to the client. This ensures that
-the application can handle HTTP requests efficiently and reliably in a scalable setup.
-
-> `gunicorn` and `waitress` are similar tools and can be used for the same purpose,
-> but sometimes running `gunicorn` on windows results in problems that can be circumvented by using `waitress` instead.
->
-> See the following [quote](https://docs.gunicorn.org/en/stable/index.html) from the official gunicorn website:
->> Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX.
-
-For more information about WSGI and its configuration, see the [wsgi documentation](./docs/wsgi.md).
-
-### Seeding the application with data
-
-This section will guide you through the process of providing an initial seed to the application.
-
-To initially seed the application you can run the management command `seed_db` to fill the database with some categories and testing products.
-
-In order to run that comand go the the directory, where your `manage.py` file is stored and run the following command:
+To fill the database with sample categories and products, run:
 
 ```bash
 python manage.py seed_db
 ```
 
-### Containerization
+### Testing
 
-This section should give a brief overview about the containerization of the django app.
-
-> [!NOTE]
-> This guide assumes you are using the docker engine, docker desktop, or anything similar.
-> For other tools that are compliant with the OCI spec the commands will be slightly different, but more or less the same.
-
-#### Build an image
-
-You can build the container image by running the following command in your terminal:
+Run the test suite from the `src` directory:
 
 ```bash
-# use -t to provide a tag together with the image name
-# -> baby-tools-world is the image name, 'local' is the tag
+python manage.py test
+```
+
+### Admin Panel
+
+To manage the application data, log in to the Django admin panel at
+`http://localhost:8000/admin/` with your superuser credentials.
+
+If you have not yet created a superuser you can do it now:
+
+```bash
+python manage.py createsuperuser
+```
+
+The admin panel allows you to create and manage products, categories,
+tags, and comments.
+
+## Project Structure
+
+- `src/`: Application source code containing the Django project, apps, templates and settings.
+- `src/products/`: Manages products, categories, tags, comments and ratings.
+- `src/users/`: Handles user authentication and registration.
+- `src/products/tests/`: Unit tests for models, views, templates and admin registration.
+- `requirements.txt`: All pinned project dependencies.
+
+## Docker Container
+
+This point is optional:  
+
+Build the container image:
+
+```bash
 docker build -t baby-tools-world:local .
 ```
 
-#### Run a container
-
-To start a container based on the image, use the following command in your terminal:
+Start a container:
 
 ```bash
 docker run --rm -it -p 8000:8000 baby-tools-world:local
 ```
 
-In order to overwrite predefined environment configuration in the app, you can specify an `.env` file by adding the option to the command like below:
+To override the predefined environment configuration, provide an `.env` file:
 
 ```bash
 docker run --rm -it -p 8000:8000 --env-file .env baby-tools-world:local
 ```
+
+The application is then reachable at `http://localhost:8000`

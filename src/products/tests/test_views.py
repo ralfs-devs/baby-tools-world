@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -259,3 +261,34 @@ class ProductViewAndCommentFormTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         related = list(resp.context["related_products"])
         self.assertLessEqual(len(related), 8)
+
+    def test_comment_form_cleared_for_submitted_product_only(self) -> None:
+        """Test that the form is cleared for the just-rated product."""
+        self.client.login(username="tester", password="pass1234")
+        Comment.objects.create(product=self.product, user=self.user, rating=3, text="Old")
+        url = reverse("product_detail", args=[self.category.slug, self.product.pk])
+        resp = self.client.post(url, data={"rating": 5, "text": "New"}, follow=True)
+        form = resp.context["form"]
+        self.assertEqual(form.initial, {})
+
+    def test_comment_form_prefilled_for_other_product_after_submission(self) -> None:
+        """Test that another product's form is still prefilled after a submission elsewhere."""
+        other = Product.objects.create(name="Red Rattle", price=Decimal("5.00"), category=self.category)
+        Comment.objects.create(product=other, user=self.user, rating=2, text="Old")
+        self.client.login(username="tester", password="pass1234")
+        url = reverse("product_detail", args=[self.category.slug, self.product.pk])
+        self.client.post(url, data={"rating": 5, "text": "New"}, follow=True)
+        other_url = reverse("product_detail", args=[self.category.slug, other.pk])
+        resp = self.client.get(other_url)
+        form = resp.context["form"]
+        self.assertEqual(form.initial.get("rating"), 2)
+
+    def test_comment_form_prefilled_again_on_later_visit(self) -> None:
+        """Test that the form is prefilled again when visiting later without prior submission."""
+        Comment.objects.create(product=self.product, user=self.user, rating=3, text="Old")
+        self.client.login(username="tester", password="pass1234")
+        url = reverse("product_detail", args=[self.category.slug, self.product.pk])
+        self.client.post(url, data={"rating": 5, "text": "New"}, follow=True)
+        resp = self.client.get(url)
+        form = resp.context["form"]
+        self.assertEqual(form.initial.get("rating"), 5)
